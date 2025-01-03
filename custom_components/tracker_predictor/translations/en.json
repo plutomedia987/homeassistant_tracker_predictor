@@ -1,0 +1,20 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Predict Octopus Tracker",
+                "description": "Choose your region and formula",
+                "data": {
+                    "tracker_formulae": "Formula",
+                    "tracker_region": "Region"
+                }
+            }
+        },
+        "error": {
+            "unknown": "[%key:common::config_flow::error::unknown%]"
+        },
+        "abort": {
+            "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+        }
+    }
+}

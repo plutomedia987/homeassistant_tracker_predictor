@@ -1,0 +1,15 @@
+{
+    "domain": "pluto_tracker_predictor",
+    "name": "Octopus Tracker Predictor",
+    "config_flow": true,
+    "documentation": "https://github.com/plutomedia987/homeassistant_tracker_predictor",
+    "requirements": ["swig", "git+https://github.com/plutomedia987/homeassistant_fann.git", "git+https://github.com/plutomedia987/fann2.git"],
+    "ssdp": [],
+    "zeroconf": [],
+    "homekit": {},
+    "dependencies": ["national_grid"],
+    "version": "0.0.0",
+    "codeowners": ["@plutomedia987"],
+    "iot_class": "cloud_polling",
+    "issue_tracker": "https://github.com/plutomedia987/homeassistant_tracker_predictor/issues"
+}
