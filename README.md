@@ -1,5 +1,7 @@
 ## Octopus Tracker Tariff Predictor
-Octopus Tracker Tariff Predictor
+Octopus Tracker Tariff Predictor.
+
+This integration will predict the next 13 days of tracker pricing. The further out you go, the worse the prediction
 
 # Requires:
 https://github.com/JRascagneres/HA-NationalGrid
