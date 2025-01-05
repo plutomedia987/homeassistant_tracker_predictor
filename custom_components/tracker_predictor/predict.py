@@ -2,7 +2,7 @@
 
 from .const import DOMAIN, FANN_LIB, ANN
 
-from ctypes import *
+# from ctypes import *
 
 from homeassistant.core import HomeAssistant, State
 
@@ -12,14 +12,16 @@ import string
 
 import pytz
 
-from .stdout import *
+# from .stdout import *
+
+from .fann.ann import ann
 
 
 class OctopusTrackerPredict:
     def __init__(self, hass):
         """Initialise the neural network."""
 
-        self.fann = hass.data[DOMAIN][FANN_LIB]
+        self.fann: ann = hass.data[DOMAIN][ANN]
 
         self.MAX_WIND = 30000
         self.MIN_WIND = 0
@@ -52,10 +54,14 @@ class OctopusTrackerPredict:
             demand = self.getData(demand_sensor, dateVal, "national_demand")
 
             prediction = self.denormalise_price(
-                self.fann.run(
-                    self.normalise_wind(wind)
-                    + self.normalise_solar(solar)
-                    + self.normalise_demand(demand)
+                list(
+                    self.fann.run(
+                        tuple(
+                            self.normalise_wind(wind)
+                            + self.normalise_solar(solar)
+                            + self.normalise_demand(demand)
+                        )
+                    )
                 )
             )
 

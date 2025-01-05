@@ -15,14 +15,16 @@ import logging
 import os, sys
 import pathlib
 
-libfannLoc = str(list(pathlib.Path("/").glob("**/config/custom_libraries/libfann"))[0])
+# libfannLoc = str(list(pathlib.Path("/").glob("**/config/custom_libraries/libfann"))[0])
 
-if libfannLoc not in sys.path:
-    sys.path.append(libfannLoc)
+# if libfannLoc not in sys.path:
+#     sys.path.append(libfannLoc)
 
-from fann2 import libfann
+# from fann2 import libfann
 
 # from .stdout import *
+
+from .fann.ann import ann
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,14 +50,25 @@ def setup(hass: HomeAssistant, config):
 
     # with capture_c_stdout():
     # hass.data[DOMAIN][ANN] = hass.data[DOMAIN][FANN_LIB].fann_create_from_file(filename)
-    hass.data[DOMAIN][FANN_LIB] = libfann.neural_net()
-    createdAnn = hass.data[DOMAIN][FANN_LIB].create_from_file(
-        hass.data[DOMAIN][INTEGRATION_PATH] + "/trained.net"
-    )
+    # hass.data[DOMAIN][FANN_LIB] = libfann.neural_net()
+    # createdAnn = hass.data[DOMAIN][FANN_LIB].create_from_file(
+    #     hass.data[DOMAIN][INTEGRATION_PATH] + "/trained.net"
+    # )
 
     # print("Created ANN: ", createdAnn)
 
-    return createdAnn
+    neural_net = ann()
+
+    hass.data[DOMAIN][ANN] = neural_net
+
+    # neural_net.create_standard(3, (3, 3, 3))
+    neural_net.create_from_fann_file(
+        hass.data[DOMAIN][INTEGRATION_PATH] + "/trained.net"
+    )
+
+    # neural_net.print_network(hass.data[DOMAIN][INTEGRATION_PATH] + "/network.txt")
+
+    return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
