@@ -112,10 +112,10 @@ int main(){
     // fann_save_train(test_data, "test_normalise.data");
     
 	// ann = fann_create_shortcut(2, fann_num_input_train_data(train_data), fann_num_output_train_data(train_data));
-    ann = fann_create_standard(5, num_input, 100,50,25, num_output);
+    ann = fann_create_standard(4, num_input, 64,32, num_output);
 
     fann_set_training_algorithm(ann, FANN_TRAIN_RPROP);
-    fann_set_activation_function_hidden(ann, FANN_SIGMOID_SYMMETRIC);
+    fann_set_activation_function_hidden(ann, FANN_COS_SYMMETRIC);
     fann_set_activation_function_output(ann, FANN_LINEAR);
     fann_set_train_error_function(ann, FANN_ERRORFUNC_LINEAR);
     
@@ -123,13 +123,13 @@ int main(){
     steepness[0] = 1;
     steepness[1] = 0.25;
     steepness[2] = 0.1;
-    fann_set_cascade_activation_steepnesses(ann, &(steepness[2]), 1);
+    fann_set_cascade_activation_steepnesses(ann, &(steepness[0]), 3);
     activation[0] = FANN_SIGMOID_SYMMETRIC;
     activation[1] = FANN_COS_SYMMETRIC;
     activation[2] = FANN_SIN_SYMMETRIC;
 
-    fann_set_cascade_activation_functions(ann, &(activation[0]), 1);		
-    // fann_set_cascade_num_candidate_groups(ann, 8);
+    fann_set_cascade_activation_functions(ann, &(activation[0]), 3);		
+    fann_set_cascade_num_candidate_groups(ann, 8);
 	
 	fann_set_bit_fail_limit(ann, (fann_type)0.01);
 	fann_set_train_stop_function(ann, FANN_STOPFUNC_BIT);
@@ -138,7 +138,7 @@ int main(){
 	printf("Training network.\n");
 
 	// fann_cascadetrain_on_data(ann, train_data, 300, 1, 0.001);
-    fann_train_on_data(ann, train_data, 10000, 500, 0.001);
+    fann_train_on_data(ann, train_data, 2000, 100, 0.001);
 	
 	mse_train = fann_test_data(ann, train_data);
 	bit_fail_train = fann_get_bit_fail(ann);

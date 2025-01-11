@@ -3,7 +3,7 @@
     "name": "Octopus Tracker Predictor",
     "config_flow": true,
     "documentation": "https://github.com/plutomedia987/homeassistant_tracker_predictor",
-    "requirements": [],
+    "requirements": ["torch"],
     "ssdp": [],
     "zeroconf": [],
     "homekit": {},

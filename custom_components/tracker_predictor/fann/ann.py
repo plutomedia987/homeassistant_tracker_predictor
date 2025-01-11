@@ -198,9 +198,11 @@ class ann:
             file.readline().rstrip().split("=")[1]
         )  # scientific notation
         cascade_activation_functions_count = int(file.readline().rstrip().split("=")[1])
-        cascade_activation_functions = int(file.readline().rstrip().split("=")[1])
+        for func in file.readline().rstrip().split("=")[1].split(" "):
+            cascade_activation_functions = int(func)
         cascade_activation_steepness_count = int(file.readline().rstrip().split("=")[1])
-        cascade_activation_steepness = float(file.readline().rstrip().split("=")[1])
+        for steepness in file.readline().rstrip().split("=")[1].split(" "):
+            cascade_activation_steepness = float(steepness)
         layer_sizes = tuple(
             [int(x) - 1 for x in file.readline().rstrip().split("=")[1].split(" ")]
         )
