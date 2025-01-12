@@ -115,7 +115,7 @@ class OctopusTrackerPredict:
             list(self.gas_ann.run(self.normalise_temperature(gas_inputs)))
         )
 
-        print(prediction)
+        # print(prediction)
 
         gas = [
             {"date": base + timedelta(days=i), "price_prediction": prediction[i]}
