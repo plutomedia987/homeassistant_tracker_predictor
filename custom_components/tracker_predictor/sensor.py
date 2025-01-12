@@ -13,12 +13,19 @@ from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.event import async_track_state_change_event, Event
 
 from .predict import OctopusTrackerPredict
 
 from .const import DOMAIN, POLLING_INTERVALE, REFRESH, TRACKER_FORMULA, TRACKER_REGION
 
-from .tracker_calc import Octopus_Tracker_Calc
+from .tracker_calc_electric import Octopus_Tracker_Calc_Electric
+from .tracker_calc_gas import Octopus_Tracker_Calc_Gas
+
+from homeassistant.core import MATCH_ALL, EVENT_CALL_SERVICE
+
+from homeassistant.components.weather import async_get_forecasts_service, WeatherEntity
+from homeassistant.config_entries import ConfigEntries
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -56,10 +63,45 @@ class OctopusTrackerPredictionCoordinator(DataUpdateCoordinator):
         self.region = region
         self.formula = formula
 
+        # self.weather_listener = hass.bus.async_listen(
+        #     MATCH_ALL, self._handle_forecast_update
+        # )
+
+        # self.weather_listener = async_track_state_change_event(
+        #     hass,
+        #     ["weather.forecast_home"],
+        #     self._handle_forecast_update,
+        # )
+
+        # self.national_grid_listener = async_track_state_change_event(
+        #     hass,
+        #     [
+        #         "sensor.national_grid_wind_forecast_fourteen_day",
+        #         "sensor.national_grid_grid_demand_fourteen_day_forecast",
+        #         "sensor.national_grid_embedded_solar_forecast_fourteen_day",
+        #     ],
+        #     self._handle_national_grid_update,
+        # )
+
+        # hass.bus.async_listen(EVENT_CALL_SERVICE, self._handle_forecast_update)
+        # print(hass.bus.async_fire("get_forecasts", {"type": "daily"}))
+
+        # async_forecast_daily
+
         self.my_api = OctopusTrackerPredict(hass)
-        self.octo_tracker_calc = Octopus_Tracker_Calc()
+        self.octo_tracker_calc_electric = Octopus_Tracker_Calc_Electric()
+        self.octo_tracker_calc_gas = Octopus_Tracker_Calc_Gas()
 
         self.last_data_refresh = None
+        self.data = {}
+
+    # async def _handle_forecast_update(self, event: Event):
+    #     data = event.data
+    #     print(f"Weather: {data}")
+
+    # async def _handle_national_grid_update(self, event: Event):
+    #     data = event.data
+    #     print(f"NG: {data}")
 
     async def _async_update_data(self):
         """Fetch data from API endpoint.
@@ -87,9 +129,23 @@ class OctopusTrackerPredictionCoordinator(DataUpdateCoordinator):
             # handled by the data update coordinator.
             async with async_timeout.timeout(30):
                 data = await self.my_api.async_get_data(self.hass)
-                for i in range(0, len(data["data"]), 1):
-                    data["data"][i]["octopus_price"] = self.octo_tracker_calc.calc(
-                        self.region, self.formula, data["data"][i]["price_prediction"]
+
+                for i in range(0, len(data["electric_data"]), 1):
+                    data["electric_data"][i]["octopus_price"] = (
+                        self.octo_tracker_calc_electric.calc(
+                            self.region,
+                            self.formula,
+                            data["electric_data"][i]["price_prediction"],
+                        )
+                    )
+
+                for i in range(0, len(data["gas_data"]), 1):
+                    data["gas_data"][i]["octopus_price"] = (
+                        self.octo_tracker_calc_gas.calc(
+                            self.region,
+                            self.formula,
+                            data["gas_data"][i]["price_prediction"],
+                        )
                     )
 
                 self.last_data_refresh = time.time()
@@ -97,7 +153,7 @@ class OctopusTrackerPredictionCoordinator(DataUpdateCoordinator):
             #    raise UpdateFailed(f"Error communicating with API: {err}") from err
 
             if self.sensor_name is None:
-                self.sensor_name = f"octo_tracker_14_predic_{self.octo_tracker_calc.get_formula_name_by_key(self.formula)}_{self.octo_tracker_calc.get_region_name_by_key(self.region)}"
+                self.sensor_name = f"octo_tracker_14_predic_{self.octo_tracker_calc_electric.get_formula_name_by_key(self.formula)}_{self.octo_tracker_calc_electric.get_region_name_by_key(self.region)}"
 
             # if self.description is None:
             #     self.description = (
@@ -105,7 +161,7 @@ class OctopusTrackerPredictionCoordinator(DataUpdateCoordinator):
             #     )
 
             if self.friendly_name is None:
-                self.friendly_name = f"Octopus Tracker 14 Day Prediction For {self.octo_tracker_calc.get_formula_name_by_key(self.formula)} in {self.octo_tracker_calc.get_region_name_by_key(self.region)}"
+                self.friendly_name = f"Octopus Tracker 14 Day Prediction For {self.octo_tracker_calc_electric.get_formula_name_by_key(self.formula)} in {self.octo_tracker_calc_electric.get_region_name_by_key(self.region)}"
 
             data["name"] = self.sensor_name
             # data["description"] = self.description

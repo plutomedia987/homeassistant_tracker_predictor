@@ -15,7 +15,7 @@ from homeassistant.helpers.selector import selector
 
 from .const import DOMAIN, TRACKER_FORMULA, TRACKER_REGION
 
-from .tracker_calc import Octopus_Tracker_Calc
+from .tracker_calc_electric import Octopus_Tracker_Calc_Electric
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -24,14 +24,14 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(TRACKER_FORMULA): selector(
             {
                 "select": {
-                    "options": Octopus_Tracker_Calc.get_formulae_selector(),
+                    "options": Octopus_Tracker_Calc_Electric.get_formulae_selector(),
                 }
             }
         ),
         vol.Required(TRACKER_REGION): selector(
             {
                 "select": {
-                    "options": Octopus_Tracker_Calc.get_regions_selector(),
+                    "options": Octopus_Tracker_Calc_Electric.get_regions_selector(),
                 }
             }
         ),

@@ -66,6 +66,9 @@ class layer:
         for i in range(0, len(values), 1):
             self.neurons[i].set_value(values[i])
 
+        # Set bias
+        self.neurons[-1].set_value(1)
+
         return True
 
     def get_neuron_values(self) -> tuple[float]:

@@ -95,12 +95,14 @@ class neuron:
             neuron_sum = 0
 
             for conn_in in self.connections_in:
+                # print(
+                #     f"{neuron_sum} += {conn_in.get_weight()} * {conn_in.get_inVal()} ({conn_in.get_value()})"
+                # )
                 neuron_sum += conn_in.get_value()
 
-            neuron_sum *= self.activation_steepness
+            # print(f"Neuron {self.layer_id}_{self.neuron_id}, sum: {neuron_sum}")
 
-            if self.activation_steepness == 0:
-                pass
+            neuron_sum *= self.activation_steepness
 
             max_sum = 150 / self.activation_steepness
             if neuron_sum > max_sum:
@@ -113,6 +115,11 @@ class neuron:
             self.set_value(
                 self._activation_switch(self.activation_function, neuron_sum)
             )
+
+            # print(f"Neuron {self.layer_id}_{self.neuron_id}, sum: {self.sum}")
+
+        # if self.is_bias:
+        #     print(f"Update bias connections {self.value}")
 
         self.update_connections_out()
 

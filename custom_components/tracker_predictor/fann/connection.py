@@ -5,8 +5,9 @@ class connection:
         self.to_neuron_id: int = None
         self.to_layer_id: int = None
         self.weight: float = 0
-        self.value: float = 0
+        self.value: float = 1
         self.con_id: int = con_id
+        self.inVal = 1
 
     def set_to_neuron(self, to_neuron_id: int, to_layer_id: int):
         self.to_neuron_id = to_neuron_id
@@ -23,6 +24,7 @@ class connection:
 
     def process_value(self, value: float):
         self.value = value * self.weight
+        self.inVal = value
 
     def get_value(self) -> float:
         return self.value
@@ -32,3 +34,6 @@ class connection:
 
     def set_weight(self, weight: float):
         self.weight = weight
+
+    def get_inVal(self):
+        return self.inVal

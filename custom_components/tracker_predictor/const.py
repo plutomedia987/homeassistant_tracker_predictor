@@ -4,7 +4,8 @@ DOMAIN = "pluto_tracker_predictor"
 # DOMAIN_DATA = f"{DOMAIN}_data"
 FANN_LIB = "fann_lib"
 INTEGRATION_PATH = "int_path"
-ANN = "ann"
+ELECTRIC_ANN = "electric_ann"
+GAS_ANN = "gas_ann"
 
 # Platforms
 SENSOR = "sensor"

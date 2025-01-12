@@ -7,8 +7,8 @@
     "ssdp": [],
     "zeroconf": [],
     "homekit": {},
-    "dependencies": ["national_grid"],
-    "version": "1.0.0",
+    "dependencies": ["national_grid", "weather"],
+    "version": "1.0.3",
     "codeowners": ["@plutomedia987"],
     "iot_class": "local_polling",
     "issue_tracker": "https://github.com/plutomedia987/homeassistant_tracker_predictor/issues"
