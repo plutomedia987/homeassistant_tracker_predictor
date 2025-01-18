@@ -57,10 +57,18 @@ class OctopusTrackerPredict:
 
         # print(forcast_sensor)
 
+        weather_entities = [
+            x
+            for x in hass.states.async_entity_ids("weather")
+            if x in ["weather.forecast_home", "weather.forecast", "weather.home"]
+        ]
+
+        # print(weather_entities)
+
         daily_forecast = await hass.services.async_call(
             "weather",
             "get_forecasts",
-            {"type": "daily", "entity_id": "weather.forecast_home"},
+            {"type": "daily", "entity_id": weather_entities[0]},
             blocking=True,
             return_response=True,
         )
