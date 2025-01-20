@@ -108,7 +108,7 @@ class OctopusTrackerPredict:
 
         gas_inputs = [
             x["temperature"]
-            for x in daily_forecast["weather.forecast_home"]["forecast"]
+            for x in daily_forecast[weather_entities[0]]["forecast"]
         ]
 
         # Trained for one too many. Bodge for now
